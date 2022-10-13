@@ -3,6 +3,7 @@ import 'package:peliculas/models/movie.dart';
 import 'package:peliculas/providers/movies_provider.dart';
 import 'package:provider/provider.dart';
 
+// ignore: camel_case_types
 class movieSearchDelegate extends SearchDelegate {
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -30,8 +31,11 @@ class movieSearchDelegate extends SearchDelegate {
   Widget _emptyContainer() {
     return Container(
       child: Center(
-        child: Icon(Icons.movie_creation_outlined,
-            color: Colors.black38, size: 150),
+        child: Icon(
+          Icons.movie_creation_outlined,
+          color: Colors.black38,
+          size: 130,
+        ),
       ),
     );
   }
@@ -41,15 +45,13 @@ class movieSearchDelegate extends SearchDelegate {
     if (query.isEmpty) {
       return _emptyContainer();
     }
+
     final moviesProvider = Provider.of<MoviesProvider>(context, listen: false);
     return FutureBuilder(
       future: moviesProvider.searchMovie(query),
+      // stream: moviesProvider.suggestionStream,
       builder: (_, AsyncSnapshot<List<Movie>> snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+        if (!snapshot.hasData) return _emptyContainer();
         final movies = snapshot.data!;
         return ListView.builder(
           itemCount: movies.length,
